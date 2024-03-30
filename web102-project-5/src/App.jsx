@@ -17,6 +17,11 @@ function App() {
   const [search,setSearch] = useState("");
   const [popCity,setPopCity] = useState("");
   const [popState,setPopState] = useState("");
+  const [closestBar, setClosestBar] = useState('');
+  const [closestBarLink, setClosestBarLink] = useState('');
+  const chiLat = 41.8781;
+  const chiLong = -87.6298;
+
 
 
   useEffect(() => {
@@ -36,6 +41,17 @@ function App() {
     
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // Chicago's coordinates
+    const chiLat = 41.8781;
+    const chiLong = -87.6298;
+
+    if (searchBars.length > 0) {
+        const closest = findClosestBar(chiLat, chiLong, searchBars);
+        setClosestBar(closest);
+    }
+  }, [searchBars]);
 
   const updateSearch = (event) =>{
     setSearch(event.target.value);
@@ -118,6 +134,29 @@ function App() {
 
   }
 
+  function findClosestBar(lat, lon, breweries) {
+    let tempclosestBar = null;
+    let tempClosestBarLink = null;
+    let minDistance = Number.MAX_VALUE;
+
+    breweries.forEach(brewery => {
+        const distance = getDistanceFromLatLonInMiles(lat, lon, brewery.latitude, brewery.longitude);
+        if (distance < minDistance) {
+            minDistance = distance;
+            tempclosestBar = brewery.name;
+            tempClosestBarLink = brewery.website_url;
+        }
+    });
+    setClosestBarLink(tempClosestBarLink);
+    return tempclosestBar;
+}
+
+  function showAllBars(){
+    setSearchBars(allBars);
+    calculateMostPopularCity(searchBars);
+    calculateMostPopularState(searchBars);
+  }
+
   function handleWebsite(){
     setSearchBars(barsWithWebsites);
     calculateMostPopularCity(searchBars);
@@ -136,17 +175,37 @@ function App() {
     }
   }
 
+  function deg2rad(deg) {
+    return deg * (Math.PI/180);
+  }
+  
+  function getDistanceFromLatLonInMiles(lat1, lon1, lat2, lon2) {
+    const earthRadius = 3958.8; // Earth radius in miles
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = Math.floor(earthRadius * c); // Distance in miles
+
+    return distance;
+  }
+  
+  // Example usage:
+  const distance = getDistanceFromLatLonInMiles(41.8781, -87.6298, 34.0522, -118.2437);
+  console.log(distance); // Output distance between Chicago and Los Angeles in miles
 
 
   return (
     <>
 
-      <h1>Total Bars: {totalBars}</h1>
+      <h1 className='title'>FIND A BAR!</h1>
 
-      <div className='stats'>
-        <h1 className='stats-box'>Most Popular State: {popState}</h1>
-        <h1 className='stats-box'>Most Popular City: {popCity}</h1>
-      </div>
+      <h1 className='title'>Total Bars: {totalBars}</h1>
+
+      <img src="https://imgix.ranker.com/list_img_v2/1264/541264/original/the-very-best-of-the-drunk-baby-meme-u2?fit=crop&fm=pjpg&q=80&dpr=2&w=1200&h=720"/>
 
       <div className='search-container'>
         <input type="text" value={search} onChange={updateSearch} placeholder="Search bars by name..."></input>
@@ -156,13 +215,19 @@ function App() {
 
 
       <div class="filter-container">
-        <button class="filter-btn" onClick={handleWebsite}>Show All</button>
+        <button class="filter-btn" onClick={showAllBars}>All Breweries</button>
+        <button class="filter-btn" onClick={searchByName}>Show All From Search</button>
         <button class="filter-btn" onClick={handleWebsite}>Has Website</button>
         <button class="filter-btn" onClick={handlePhone}>Has Phone Number</button>
       </div>
 
-          <h2>Search Results: {searchBars.length}</h2>
-          
+      <div className='stats'>
+        <h2 className='stats-box'>Brewries Found: {searchBars.length}</h2>
+        <h2 className='stats-box'>Most Popular State: {popState}</h2>
+        <h2 className='stats-box'>Most Popular City: {popCity}</h2>
+        <h2 className='stats-box'>Closest City to Chicago: <a target="_blank" href={closestBarLink}>{closestBar}</a></h2>
+      </div>
+      
           {searchBars.length > 0 || !search==="" ? (
 
           <table >
@@ -174,6 +239,7 @@ function App() {
                 <th>State</th>
                 <th>Website</th>
                 <th>Phone</th>
+                <th>Approx. Distance from Chicago</th>
               </tr>
             </thead>
             <tbody>
@@ -183,8 +249,9 @@ function App() {
                   <td>{bar.street}</td>
                   <td>{bar.city}</td>
                   <td>{bar.state}</td>
-                  <td><a href={bar.website_url}>{bar.website_url}</a></td>
+                  <td><a target="_blank" href={bar.website_url}>{bar.website_url}</a></td>
                   <td>{bar.phone}</td>
+                  <td>{getDistanceFromLatLonInMiles(chiLat, chiLong, bar.longitude, bar.latitude)} miles</td>
                 </tr>
               ))}
             </tbody>
@@ -201,6 +268,8 @@ function App() {
                   <th>City</th>
                   <th>State</th>
                   <th>Website</th>
+                  <th>Phone</th>
+                  <th>Approx. Distance from Chicago</th>
                 </tr>
               </thead>
               <tbody>
@@ -210,7 +279,9 @@ function App() {
                     <td>{bar.street}</td>
                     <td>{bar.city}</td>
                     <td>{bar.state}</td>
-                    <td><a href={bar.website_url}>{bar.website_url}</a></td>
+                    <td><a target="_blank"  href={bar.website_url}>{bar.website_url}</a></td>
+                    <td>{bar.phone}</td>
+                    <td>{getDistanceFromLatLonInMiles(chiLat, chiLong, bar.longitude, bar.latitude)} miles</td>
                   </tr>
                 ))}
               </tbody>

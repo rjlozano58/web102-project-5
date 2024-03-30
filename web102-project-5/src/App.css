@@ -103,4 +103,54 @@ button:hover{
   background:rgb(222, 186, 107);
   border:2px solid white;
   border-radius:0.5em;
+  margin:0 20px;
+  transition: 0.3s;
+}
+
+.stats-box:hover{
+  background:white;
+  color: rgb(222, 186, 107);
+}
+
+p{
+  text-align: center;
+
+}
+
+button:active{
+  transform: scale(1.1);
+}
+
+.title{
+  text-align: center;
+  padding:20px;
+  background:#382b25;
+  width:fit-content;
+  margin:20px auto;
+  border-radius: 5px;
+
+  
+}
+
+.title:hover{
+  animation-name: spin;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+img{
+  width:35%;
+  display: block;
+  margin:0 auto;
+  transition: 0.3s;
+}
+img:hover{
+  /* transform: rotate(90deg); */
+  animation-name: spin;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
