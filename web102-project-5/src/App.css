@@ -1,42 +1,106 @@
-#root {
-  max-width: 1280px;
+body{
+  background: rgb(0, 58, 0);
+  color:white;
+  font-family: Helvetica;
+  font-weight: 300;
+}
+
+.bar-box{
+  background: grey;
+  width:80vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin:20px 0;
+}
+.bar-box div p{
+  /* background:black; */
+  background: rgb(143, 73, 73);
+  border:2px solid black;
+  border-radius: 10px;
+}
+
+table{
+  max-width: 80%;
+  background:rgb(0, 58, 0);
+  display: block;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding:10px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+th, td{
+  border:1px solid white;
+  border-radius: 5px;
+  max-width: 30vw;
+  padding:10px;
+  transition: 0.3s;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+td:hover{
+  background-color: white;
+  color:green;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+th:hover{
+  background-color: white;
+  color:green;
 }
 
-.card {
-  padding: 2em;
+a{
+  color:white;
+  outline: none;
+  text-decoration:none;
+}
+a:hover{
+  color:green;
+  outline: none;
+  text-decoration:none;
 }
 
-.read-the-docs {
-  color: #888;
+.filter-container{
+  padding:20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+input{
+  height:2em;
+  width:50%;
+
+}
+
+button{
+  background: rgb(0, 58, 0);
+  border: 1px solid white;
+  color:white;
+  border-radius: 5px;
+  padding:8px;
+  transition:0.3s;
+  margin:0 20px;
+}
+
+button:hover{
+  background: white;
+  color:green;
+  border: 1px solid green;
+}
+
+.search-container{
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.stats{
+  padding:20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.stats-box{
+  padding:2em 1em;
+  background:rgb(222, 186, 107);
+  border:2px solid white;
+  border-radius:0.5em;
 }
